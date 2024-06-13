@@ -1,0 +1,16 @@
+.env
+
+Makefile
+
+*.yaml
+
+/deployments/prod/*.yaml
+/deployments/prod/*.conf
+
+
+/deployments/staging/*.yaml
+/deployments/staging/*.conf
+
+/cmd/web/out
+
+/deployments/compose/.dbstorage
