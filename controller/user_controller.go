@@ -98,7 +98,7 @@ func (controller *UserController) Login(ctx *gin.Context) {
 		return
 	}
 
-	token, err := helper.GenerateToken(user.Username)
+	token, err := helper.GenerateToken(user.Username, strconv.Itoa(user.Id))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, helper.ErrorFormatter(err, "Error generating token"))
 		return
@@ -111,60 +111,6 @@ func (controller *UserController) Login(ctx *gin.Context) {
 			"token": token,
 			"user":  user,
 		},
-	}
-	ctx.Header("Content-Type", "application/json")
-	ctx.JSON(http.StatusOK, webResponse)
-}
-
-func (controller *UserController) Update(ctx *gin.Context) {
-	updateUserRequest := request.UpdateUserRequest{}
-	err := ctx.ShouldBindJSON(&updateUserRequest)
-	helper.ErrorPanic(err)
-
-	userId := ctx.Param("userId")
-	id, err := strconv.Atoi(userId)
-	helper.ErrorPanic(err)
-
-	updateUserRequest.Id = id
-
-	controller.userService.Update(updateUserRequest)
-
-	webResponse := response.Response{
-		Code:   200,
-		Status: "Ok",
-		Data:   nil,
-	}
-
-	ctx.JSON(http.StatusOK, webResponse)
-}
-
-func (controller *UserController) Delete(ctx *gin.Context) {
-	userId := ctx.Param("userId")
-	id, err := strconv.Atoi(userId)
-	helper.ErrorPanic(err)
-	controller.userService.Delete(id)
-
-	webResponse := response.Response{
-		Code:   200,
-		Status: "Ok",
-		Data:   nil,
-	}
-
-	ctx.JSON(http.StatusOK, webResponse)
-
-}
-
-func (controller *UserController) FindById(ctx *gin.Context) {
-	userId := ctx.Param("userId")
-	id, err := strconv.Atoi(userId)
-	helper.ErrorPanic(err)
-
-	userResponse := controller.userService.FindById(id)
-
-	webResponse := response.Response{
-		Code:   200,
-		Status: "Ok",
-		Data:   userResponse,
 	}
 	ctx.Header("Content-Type", "application/json")
 	ctx.JSON(http.StatusOK, webResponse)

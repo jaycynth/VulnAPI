@@ -3,7 +3,6 @@ package repository
 import (
 	"errors"
 
-	"github.com/security-testing-api/data/request"
 	"github.com/security-testing-api/helper"
 	"github.com/security-testing-api/model"
 	"golang.org/x/crypto/bcrypt"
@@ -84,29 +83,4 @@ func (t UserRepositoryImpl) FindAll() ([]model.User, error) {
 
 	return users, nil
 
-}
-
-func (t UserRepositoryImpl) Update(User model.User) {
-	var updateTag = request.UpdateUserRequest{
-		Id:       User.Id,
-		Username: User.Username,
-	}
-	result := t.Db.Model(&User).Updates(updateTag)
-	helper.ErrorPanic(result.Error)
-}
-
-func (t UserRepositoryImpl) Delete(UserId int) {
-	var User model.User
-	result := t.Db.Where("id = ?", UserId).Delete(&User)
-	helper.ErrorPanic(result.Error)
-}
-
-func (t UserRepositoryImpl) FindById(UserId int) (model.User, error) {
-	var user model.User
-	result := t.Db.Find(&user, UserId)
-	if result != nil {
-		return user, nil
-	} else {
-		return user, errors.New("user is not found")
-	}
 }

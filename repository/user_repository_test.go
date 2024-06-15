@@ -41,60 +41,6 @@ func TestUserRepositoryImpl_Save(t *testing.T) {
 	repo.Save(user)
 }
 
-func TestUserRepositoryImpl_Update(t *testing.T) {
-	db, mock := setupDB(t)
-	repo := NewUserRepositoryImpl(db)
-
-	user := model.User{
-		Id:       1,
-		Username: "updateduser",
-	}
-
-	mock.ExpectBegin()
-	mock.ExpectExec("UPDATE `users`").
-		WithArgs(user.Username, user.Id).
-		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectCommit()
-
-	repo.Update(user)
-}
-
-func TestUserRepositoryImpl_Delete(t *testing.T) {
-	db, mock := setupDB(t)
-	repo := NewUserRepositoryImpl(db)
-
-	userId := 1
-
-	mock.ExpectBegin()
-	mock.ExpectExec("DELETE FROM `users` WHERE `users`.`id` = ?").
-		WithArgs(userId).
-		WillReturnResult(sqlmock.NewResult(0, 1))
-	mock.ExpectCommit()
-
-	repo.Delete(userId)
-}
-
-func TestUserRepositoryImpl_FindById(t *testing.T) {
-	db, mock := setupDB(t)
-	repo := NewUserRepositoryImpl(db)
-
-	user := model.User{
-		Id:       1,
-		Username: "testuser",
-	}
-
-	rows := sqlmock.NewRows([]string{"id", "username"}).
-		AddRow(user.Id, user.Username)
-
-	mock.ExpectQuery("SELECT * FROM `users` WHERE `users`.`id` = ?").
-		WithArgs(user.Id).
-		WillReturnRows(rows)
-
-	result, err := repo.FindById(user.Id)
-	assert.NoError(t, err)
-	assert.Equal(t, user, result)
-}
-
 func TestUserRepositoryImpl_FindAll(t *testing.T) {
 	db, mock := setupDB(t)
 	repo := NewUserRepositoryImpl(db)

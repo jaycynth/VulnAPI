@@ -33,28 +33,6 @@ func (t UserServiceImpl) Create(user request.CreateUserRequest) {
 	t.UserRepository.Save(userModel)
 }
 
-func (t UserServiceImpl) Update(user request.UpdateUserRequest) {
-	userData, err := t.UserRepository.FindById(user.Id)
-	helper.ErrorPanic(err)
-	userData.Username = user.Username
-	t.UserRepository.Update(userData)
-}
-
-func (t UserServiceImpl) Delete(userId int) {
-	t.UserRepository.Delete(userId)
-}
-
-func (t UserServiceImpl) FindById(userId int) response.UserResponse {
-	userData, err := t.UserRepository.FindById(userId)
-	helper.ErrorPanic(err)
-
-	userResponse := response.UserResponse{
-		Id:       userData.Id,
-		Username: userData.Username,
-	}
-	return userResponse
-}
-
 func (t UserServiceImpl) FindAll() ([]response.UserResponse, error) {
 	result, err := t.UserRepository.FindAll()
 	if err != nil {
@@ -66,6 +44,7 @@ func (t UserServiceImpl) FindAll() ([]response.UserResponse, error) {
 		user := response.UserResponse{
 			Id:       value.Id,
 			Username: value.Username,
+			Email:    value.Email,
 		}
 		users = append(users, user)
 	}
@@ -81,6 +60,7 @@ func (t UserServiceImpl) Login(Username string, Passwrod string) (response.UserR
 	user := response.UserResponse{
 		Id:       result.Id,
 		Username: result.Username,
+		Email:    result.Email,
 	}
 
 	return user, nil

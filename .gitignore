@@ -14,3 +14,18 @@ Makefile
 /cmd/web/out
 
 /deployments/compose/.dbstorage
+
+
+/deployments/staging/key.pem
+/deployments/staging/cert.pem
+
+/deployments/prod/key.pem
+/deployments/prod/cert.pem
+
+
+/deployments/staging/*.conf
+/deployments/staging/config.yaml
+
+
+/deployments/prod/*.conf
+/deployments/prod/config.yaml

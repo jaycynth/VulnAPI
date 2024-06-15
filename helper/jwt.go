@@ -1,24 +1,27 @@
 package helper
 
 import (
+	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
 var (
-	SecretKey = []byte("your_secret_key")
+	SecretKey = []byte(os.Getenv("JWT_TOKEN"))
 )
 
 type Claims struct {
 	Username string `json:"username"`
+	UserId   string `json:"userId"`
 	jwt.StandardClaims
 }
 
-func GenerateToken(username string) (string, error) {
+func GenerateToken(username string, userId string) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &Claims{
 		Username: username,
+		UserId:   userId,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},

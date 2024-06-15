@@ -29,14 +29,18 @@ func main() {
 	validate := validator.New()
 
 	db.Table("users").AutoMigrate(&model.User{})
+	db.Table("kycs").AutoMigrate(&model.KYC{})
 
 	userRepository := repository.NewUserRepositoryImpl(db)
+	kycRepository := repository.NewKYCRepositoryImpl(db)
 
 	userService := service.NewUserServiceImpl(userRepository, validate)
+	kycService := service.NewKYCServiceImpl(kycRepository)
 
 	userController := controller.NewUserController(userService)
+	kycController := controller.NewKYCController(kycService)
 
-	routes := router.NewRouter(userController)
+	routes := router.NewRouter(userController, kycController)
 
 	server := &http.Server{
 		Addr:           ":8888",

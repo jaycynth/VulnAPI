@@ -9,8 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewRouter(userController *controller.UserController) *gin.Engine {
+func NewRouter(userController *controller.UserController, kycController *controller.KYCController) *gin.Engine {
 	service := gin.Default()
+
+	service.Use(middleware.CORSMiddleware())
 
 	service.GET("", func(context *gin.Context) {
 		context.JSON(http.StatusOK, "welcome home")
@@ -21,16 +23,22 @@ func NewRouter(userController *controller.UserController) *gin.Engine {
 	})
 
 	r := service.Group("/api")
+	r.Use(middleware.CORSMiddleware())
 
 	r.POST("/login", userController.Login)
 	r.POST("/register", userController.Create)
 
-	protectedRoutes := r.Group("/").Use(middleware.TokenAuthMiddleware())
+	userProtectedRoutes := r.Group("/users")
+	userProtectedRoutes.Use(middleware.AuthMiddleware())
 	{
-		protectedRoutes.PUT("/users/:userId", userController.Update)
-		protectedRoutes.DELETE("/users/:userId", userController.Delete)
-		protectedRoutes.GET("/users/:userId", userController.FindById)
-		protectedRoutes.GET("/users", userController.FindAll)
+		// userProtectedRoutes.GET("/:userId", userController.FindById)
+		userProtectedRoutes.GET("", userController.FindAll)
+	}
+
+	kycProtectedRoutes := r.Group("/kyc")
+	kycProtectedRoutes.Use(middleware.AuthMiddleware())
+	{
+		kycProtectedRoutes.POST("", kycController.Save)
 	}
 
 	return service
