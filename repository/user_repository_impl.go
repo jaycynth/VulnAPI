@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/security-testing-api/helper"
@@ -17,9 +16,7 @@ type UserRepositoryImpl struct {
 }
 
 func NewUserRepositoryImpl(Db *gorm.DB, hasher helper.Hasher) UserRepository {
-	hasher = &helper.BcryptHasher{}
-
-	return &UserRepositoryImpl{Db: Db, Hasher: hasher.(helper.BcryptHasher)}
+	return &UserRepositoryImpl{Db: Db, Hasher: helper.BcryptHasher{}}
 }
 
 func (t *UserRepositoryImpl) Save(user *model.User) (*model.User, error) {
@@ -44,7 +41,7 @@ func (t *UserRepositoryImpl) Save(user *model.User) (*model.User, error) {
 	case strings.Contains(strings.ToLower(err.Error()), "duplicate"):
 		return nil, errors.New("duplicate")
 	default:
-		return nil, errors.New(fmt.Sprintf("error saving user %v", err))
+		return nil, errors.New("error saving user")
 	}
 
 	return user, nil
