@@ -40,3 +40,21 @@ jobs:
 
     - name: Run tests
       run: go test -v ./...
+
+    - name: Static Code Analysis with Gosec
+      run: go get github.com/securego/gosec/v2/cmd/gosec && gosec -fmt=json -out=report.json -no-fail ./...
+
+    - name: Dependency Vulnerability Scan with Snyk
+      run: |
+        curl -sL https://github.com/snyk/snyk/releases/download/v1.691.0/snyk-linux -o snyk
+        chmod +x ./snyk
+        ./snyk auth YOUR_SNYK_TOKEN
+        ./snyk test --all-projects --json > snyk-report.json
+
+    - name: Upload Reports
+      uses: actions/upload-artifact@v2
+      with:
+        name: Security Reports
+        path: |
+          report.json
+          snyk-report.json
