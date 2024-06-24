@@ -31,7 +31,7 @@ func main() {
 	db.Table("users").AutoMigrate(&model.User{})
 	db.Table("kycs").AutoMigrate(&model.KYC{})
 
-	userRepository := repository.NewUserRepositoryImpl(db)
+	userRepository := repository.NewUserRepositoryImpl(db, helper.BcryptHasher{})
 	kycRepository := repository.NewKYCRepositoryImpl(db)
 
 	userService := service.NewUserServiceImpl(userRepository, validate)
