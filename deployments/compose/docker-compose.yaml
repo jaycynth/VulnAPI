@@ -1,0 +1,26 @@
+version: '3'
+
+services: 
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    volumes:
+      - .dbstorage/:/var/lib/mysql
+    environment:
+      MYSQL_HOST: localhost
+      MYSQL_USER: vuln
+      MYSQL_PASSWORD: vuln
+      MYSQL_ROOT_PASSWORD: vuln
+      MYSQL_DATABASE: vuln
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - frontend-bridge
+
+networks:
+  frontend-bridge:
+    external: true

@@ -13,7 +13,7 @@ func NewKYCRepositoryImpl(Db *gorm.DB) KYCRepository {
 	return &KYCRepositoryImpl{Db: Db}
 }
 
-func (r *KYCRepositoryImpl) Save(kyc model.KYC) (model.KYC, error) {
+func (r *KYCRepositoryImpl) Save(kyc *model.KYC) (*model.KYC, error) {
 	err := r.Db.Create(&kyc).Error
 	return kyc, err
 }

@@ -13,11 +13,13 @@ import (
 
 type UserRepositoryImpl struct {
 	Db     *gorm.DB
-	Hasher helper.Hasher
+	Hasher helper.BcryptHasher
 }
 
 func NewUserRepositoryImpl(Db *gorm.DB, hasher helper.Hasher) UserRepository {
-	return &UserRepositoryImpl{Db: Db, Hasher: hasher}
+	hasher = &helper.BcryptHasher{}
+
+	return &UserRepositoryImpl{Db: Db, Hasher: hasher.(helper.BcryptHasher)}
 }
 
 func (t *UserRepositoryImpl) Save(user *model.User) (*model.User, error) {

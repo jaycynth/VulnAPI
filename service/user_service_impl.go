@@ -25,7 +25,7 @@ func NewUserServiceImpl(userRepository repository.UserRepository, validate *vali
 func (t UserServiceImpl) Create(user request.CreateUserRequest) {
 	err := t.Validate.Struct(user)
 	helper.ErrorPanic(err)
-	userModel := model.User{
+	userModel := &model.User{
 		Username: user.Username,
 		Password: user.Password,
 		Email:    user.Email,

@@ -2,18 +2,22 @@
 
 Makefile
 
-*.yaml
-
-/deployments/prod/*.yaml
-/deployments/prod/*.conf
-
-
-/deployments/staging/*.yaml
-/deployments/staging/*.conf
 
 /cmd/web/out
+/cmd/web/.env
+/cmd/web/service
+
+/cmd/api/.env
+/cmd/api/config.yaml
+/cmd/api/uploads
+/cmd/api/service
+
 
 /deployments/compose/.dbstorage
+
+/deployments/staging/.dbstorage
+/deployments/staging/data
+
 
 
 /deployments/staging/key.pem
@@ -25,7 +29,9 @@ Makefile
 
 /deployments/staging/*.conf
 /deployments/staging/config.yaml
+/deployments/staging/.env
 
 
 /deployments/prod/*.conf
 /deployments/prod/config.yaml
+

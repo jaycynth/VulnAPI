@@ -83,7 +83,7 @@ func (controller *KYCController) Save(ctx *gin.Context) {
 		return
 	}
 
-	kyc := model.KYC{
+	kyc := &model.KYC{
 		UserID:         userID,
 		DocumentType:   kycRequest.DocumentType,
 		DocumentNumber: kycRequest.DocumentNumber,

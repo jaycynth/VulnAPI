@@ -13,6 +13,6 @@ func NewKYCServiceImpl(kycRepo repository.KYCRepository) KYCService {
 	return &KYCServiceImpl{kycRepo: kycRepo}
 }
 
-func (s *KYCServiceImpl) SaveKYC(kyc model.KYC) (model.KYC, error) {
+func (s *KYCServiceImpl) SaveKYC(kyc *model.KYC) (*model.KYC, error) {
 	return s.kycRepo.Save(kyc)
 }

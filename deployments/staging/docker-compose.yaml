@@ -1,0 +1,55 @@
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "443:443"
+      # - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./data/nginx/log:/var/log/nginx
+      - ./cert.pem:/cert.pem
+      - ./key.pem:/key.pem
+    depends_on:
+      - "webapp"
+      - "api"
+
+  webapp:
+    image: jaycynth/omsec_web:v0.1
+    restart: always
+    deploy:
+      replicas: 1
+
+  api:
+    image: jaycynth/omsec_api:v0.1
+    restart: always
+    command: [ "--config-file", "/app/config.yaml" ]
+    volumes:
+      - ./config.yaml:/app/config.yaml
+    environment:
+      JWT_SIGNING_KEY: ${JWT_TOKEN}
+    deploy:
+      replicas: 1
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:latest
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - .dbstorage/:/var/lib/mysql
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
