@@ -5,7 +5,7 @@ import (
 )
 
 type UserRepository interface {
-	Save(User model.User) (UserRes model.User, err error)
-	FindAll() (Users []model.User, err error)
-	Login(Username string, Password string) (User model.User, err error)
+	Save(user *model.User) (userRes *model.User, err error)
+	FindAll() (users []*model.User, err error)
+	Login(Username string, Password string) (user *model.User, err error)
 }
